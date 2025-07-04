@@ -1,71 +1,98 @@
 # Steampipe UI
 
-A modern web interface for the Steampipe REST API built with Next.js and PrimeReact.
+A modern web interface for Steampipe built with Next.js and PrimeReact.
 
 ## Features
 
-- **Health Monitoring**: Real-time system health status
-- **SQL Query Execution**: Execute SQL queries with results displayed in a data table
-- **Service Management**: Start, stop, and monitor the Steampipe database service
-- **Plugin Management**: Install, uninstall, and manage Steampipe plugins
-- **Modern UI**: Built with PrimeReact components for a professional look and feel
+### 🏠 Dashboard Overview
+- **Health Status**: Real-time API health monitoring
+- **Service Management**: Start, stop, and restart Steampipe service
+- **Plugin Management**: View installed plugins with status and connections
+- **Quick Actions**: Easy access to common operations
+
+### 📊 Dynamic Dashboards
+- **Dashboard List**: Grid and list view with search and tag filtering
+- **CRUD Operations**: Create, read, update, and delete dashboards
+- **Tag Management**: Organize dashboards with custom tags
+- **Query Execution**: Run SQL queries directly from dashboards
+- **Results Display**: Interactive data tables with sorting and filtering
+
+### 🔧 API Integration
+- **REST API Client**: Full integration with Steampipe REST API
+- **Service Control**: Manage Steampipe database service
+- **Plugin Operations**: Install, uninstall, and update plugins
+- **Query Execution**: Execute single and batch SQL queries
+- **Error Handling**: Comprehensive error handling and user feedback
 
 ## Prerequisites
 
-- Node.js 18+ 
-- Steampipe REST API server running on `http://localhost:8080`
-- Steampipe database service running (`steampipe service start`)
+1. **Steampipe REST API Server**: Must be running on `http://localhost:8080`
+2. **Node.js**: Version 18 or higher
+3. **Steampipe Service**: Should be running (`steampipe service start`)
 
 ## Installation
 
-1. **Install dependencies:**
+1. **Install Dependencies**:
    ```bash
+   cd steampipe-ui
    npm install
    ```
 
-2. **Configure environment:**
+2. **Configure API URL** (optional):
    Create a `.env.local` file in the project root:
    ```env
-   NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+   NEXT_PUBLIC_API_URL=http://localhost:8080
    ```
 
-3. **Start the development server:**
+3. **Start the Development Server**:
    ```bash
    npm run dev
    ```
 
-4. **Open your browser:**
+4. **Open in Browser**:
    Navigate to `http://localhost:3000`
 
 ## Usage
 
-### Health Tab
-- View system health status, version, and last updated timestamp
-- Refresh health status manually
+### Dashboard Overview
+- View system health and service status
+- Manage Steampipe service (start/stop/restart)
+- Monitor installed plugins
+- Access quick actions
 
-### Query Tab
-- Enter SQL queries in the input field
-- Execute queries and view results in a paginated data table
-- See query execution time and row count
+### Managing Dashboards
+1. **Create Dashboard**:
+   - Click "Add Dashboard" button
+   - Fill in name, description, tags, and SQL query
+   - Click "Create"
 
-### Service Tab
-- View current service status (running/stopped)
-- Start or stop the Steampipe database service
-- Monitor service details (port, host, database, uptime, connections)
+2. **Edit Dashboard**:
+   - Click "Edit" button on any dashboard card
+   - Modify fields as needed
+   - Click "Update"
 
-### Plugins Tab
-- View all installed plugins with their versions and status
-- Install new plugins by entering the plugin name
-- Uninstall existing plugins
+3. **Delete Dashboard**:
+   - Click "Delete" button on any dashboard card
+   - Confirm deletion in the dialog
+
+4. **Filter and Search**:
+   - Use the search box to find dashboards by name
+   - Use tag filter to show dashboards with specific tags
+   - Toggle between grid and list view
+
+### Running Queries
+1. Navigate to a dashboard detail page
+2. Review the SQL query
+3. Click "Run Query" to execute
+4. View results in the interactive data table
+5. Use sorting and filtering on result columns
 
 ## API Endpoints
 
-The UI communicates with the following Steampipe REST API endpoints:
+The UI integrates with the following Steampipe REST API endpoints:
 
 - `GET /health` - Health check
-- `POST /api/v1/query` - Execute SQL query
-- `POST /api/v1/query/batch` - Execute batch queries
-- `GET /api/v1/service/status` - Get service status
+- `GET /api/v1/service/status` - Service status
 - `POST /api/v1/service/start` - Start service
 - `POST /api/v1/service/stop` - Stop service
 - `POST /api/v1/service/restart` - Restart service
@@ -73,50 +100,52 @@ The UI communicates with the following Steampipe REST API endpoints:
 - `POST /api/v1/plugins/install` - Install plugin
 - `DELETE /api/v1/plugins/uninstall` - Uninstall plugin
 - `PUT /api/v1/plugins/update` - Update plugin
+- `POST /api/v1/query` - Execute query
+- `POST /api/v1/query/batch` - Execute batch queries
 
 ## Development
 
 ### Project Structure
 ```
 src/
-├── app/
-│   ├── layout.tsx          # Root layout with PrimeReact CSS
-│   └── page.tsx            # Main dashboard component
-├── lib/
-│   ├── api.ts              # API client configuration
-│   └── api-client/         # Generated API client (from OpenAPI)
-└── ...
+├── app/                    # Next.js app directory
+│   ├── dashboards/        # Dashboard pages
+│   │   ├── page.tsx       # Dashboard list
+│   │   └── [id]/          # Dashboard detail
+│   └── page.tsx           # Home page
+├── components/            # Reusable components
+│   └── Navigation.tsx     # Navigation bar
+└── lib/                   # Utilities
+    └── api.ts             # API client
 ```
 
-### Available Scripts
+### Key Technologies
+- **Next.js 14**: React framework with app router
+- **PrimeReact**: UI component library
+- **TypeScript**: Type-safe development
+- **Tailwind CSS**: Utility-first CSS framework
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
-
-### Technologies Used
-
-- **Next.js 15** - React framework
-- **TypeScript** - Type safety
-- **PrimeReact** - UI component library
-- **Tailwind CSS** - Utility-first CSS framework
-- **OpenAPI Generator** - API client generation
+### Building for Production
+```bash
+npm run build
+npm start
+```
 
 ## Troubleshooting
 
+### CORS Issues
+If you encounter CORS errors, ensure the Steampipe API server is configured with CORS headers.
+
+### Service Not Running
+If the service status shows as unavailable:
+1. Check if Steampipe is installed
+2. Run `steampipe service start`
+3. Verify the service is running on the expected port
+
 ### API Connection Issues
-- Ensure the Steampipe REST API server is running on the correct port
-- Check that the `NEXT_PUBLIC_API_BASE_URL` environment variable is set correctly
-- Verify that the Steampipe database service is running (`steampipe service start`)
-
-### Build Issues
-- Clear the `.next` directory and reinstall dependencies
-- Ensure all TypeScript types are properly installed
-
-### UI Issues
-- Check browser console for JavaScript errors
-- Verify that PrimeReact CSS is properly imported in the layout
+1. Verify the API server is running on the correct URL
+2. Check the `NEXT_PUBLIC_API_URL` environment variable
+3. Ensure no firewall is blocking the connection
 
 ## Contributing
 
