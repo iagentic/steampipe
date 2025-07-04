@@ -16,6 +16,7 @@ import (
 	"github.com/turbot/steampipe/pkg/plugin"
 	"github.com/turbot/steampipe/pkg/query"
 	"github.com/turbot/steampipe/pkg/steampipeconfig"
+	"github.com/gorilla/handlers"
 )
 
 type Server struct {
@@ -120,7 +121,11 @@ func (s *Server) setupRoutes() {
 func (s *Server) Start() error {
 	s.server = &http.Server{
 		Addr:    fmt.Sprintf(":%d", s.port),
-		Handler: s.router,
+		Handler: handlers.CORS(
+			handlers.AllowedOrigins([]string{"*"}),
+			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+			handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+		)(s.router),
 	}
 	
 	fmt.Printf("Steampipe REST API server starting on port %d\n", s.port)
