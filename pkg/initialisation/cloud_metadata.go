@@ -2,45 +2,33 @@ package initialisation
 
 import (
 	"context"
-	"strings"
 
 	"github.com/spf13/viper"
 	"github.com/turbot/pipe-fittings/v2/constants"
-	"github.com/turbot/pipe-fittings/v2/pipes"
 	"github.com/turbot/pipe-fittings/v2/steampipeconfig"
-	"github.com/turbot/steampipe/pkg/error_helpers"
+	"fmt"
 )
 
 func getPipesMetadata(ctx context.Context) (*steampipeconfig.PipesMetadata, error) {
-	workspaceDatabase := viper.GetString(constants.ArgWorkspaceDatabase)
-	if workspaceDatabase == "local" {
-		// local database - nothing to do here
-		return nil, nil
-	}
-	connectionString := workspaceDatabase
-
-	var pipesMetadata *steampipeconfig.PipesMetadata
-
-	// so a backend was set - is it a connection string or a database name
-	workspaceDatabaseIsConnectionString := strings.HasPrefix(workspaceDatabase, "postgresql://") || strings.HasPrefix(workspaceDatabase, "postgres://")
-	if !workspaceDatabaseIsConnectionString {
-		// it must be a database name - verify the cloud token was provided
-		cloudToken := viper.GetString(constants.ArgPipesToken)
-		if cloudToken == "" {
-			return nil, error_helpers.MissingCloudTokenError
-		}
-
-		// so we have a database and a token - build the connection string and set it in viper
-		var err error
-		if pipesMetadata, err = pipes.GetPipesMetadata(ctx, workspaceDatabase, cloudToken); err != nil {
-			return nil, err
-		}
-		// read connection string out of pipesMetadata
-		connectionString = pipesMetadata.ConnectionString
-	}
-
-	// now set the connection string in viper
-	viper.Set(constants.ArgConnectionString, connectionString)
-
-	return pipesMetadata, nil
+	// Debug output for viper values
+	fmt.Printf("[DEBUG] workspace-database: %s\n", viper.GetString(constants.ArgWorkspaceDatabase))
+	fmt.Printf("[DEBUG] connection-string: %s\n", viper.GetString(constants.ArgConnectionString))
+	fmt.Printf("[DEBUG] pipes-token: %s\n", viper.GetString(constants.ArgPipesToken))
+	fmt.Printf("[DEBUG] pipes-host: %s\n", viper.GetString(constants.ArgPipesHost))
+	
+	// Force local mode - always use local database
+	// This removes the need for Turbot Pipes cloud authentication
+	viper.Set(constants.ArgWorkspaceDatabase, "local")
+	
+	// Also ensure connection string is not set to force local mode
+	viper.Set(constants.ArgConnectionString, "")
+	
+	// Ensure pipes token is not set to avoid cloud authentication
+	viper.Set(constants.ArgPipesToken, "")
+	
+	// Also ensure pipes host is not set to avoid cloud authentication
+	viper.Set(constants.ArgPipesHost, "")
+	
+	// local database - nothing to do here
+	return nil, nil
 }

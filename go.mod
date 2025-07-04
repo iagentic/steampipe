@@ -47,6 +47,7 @@ require (
 	github.com/turbot/steampipe-plugin-sdk/v5 v5.11.7
 	github.com/turbot/terraform-components v0.0.0-20250114051614-04b806a9cbed
 	github.com/zclconf/go-cty v1.16.2 // indirect
+	github.com/gorilla/mux v1.8.1
 	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394
 	golang.org/x/sync v0.15.0
 	golang.org/x/text v0.24.0

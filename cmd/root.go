@@ -94,6 +94,7 @@ func AddCommands() {
 		generateCompletionScriptsCmd(),
 		pluginManagerCmd(),
 		loginCmd(),
+		apiCmd(),
 	)
 }
 
