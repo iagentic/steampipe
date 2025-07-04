@@ -66,7 +66,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="p-8">
+    <main className="p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
       <Toast ref={setToast} />
       
       <div className="mb-6">
@@ -76,8 +76,8 @@ export default function HomePage() {
       </div>
 
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Steampipe UI</h1>
-        <p className="text-gray-600">Manage your Steampipe service, plugins, and dashboards</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Steampipe UI</h1>
+        <p className="text-gray-600 dark:text-gray-300">Manage your Steampipe service, plugins, and dashboards</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -86,13 +86,13 @@ export default function HomePage() {
           {health ? (
             <div className="text-center">
               <div className="text-green-600 text-2xl mb-2">✓</div>
-              <p className="text-sm text-gray-600">API is healthy</p>
-              <p className="text-xs text-gray-500 mt-1">Version: {health.version}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">API is healthy</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Version: {health.version}</p>
             </div>
           ) : (
             <div className="text-center">
               <div className="text-red-600 text-2xl mb-2">✗</div>
-              <p className="text-sm text-gray-600">API is unavailable</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">API is unavailable</p>
             </div>
           )}
         </Card>
@@ -103,9 +103,9 @@ export default function HomePage() {
             <div>
               <div className="flex items-center mb-2">
                 <div className={`w-3 h-3 rounded-full mr-2 ${serviceStatus.status === 'running' ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                <span className="text-sm font-medium capitalize">{serviceStatus.status}</span>
+                <span className="text-sm font-medium capitalize text-gray-900 dark:text-white">{serviceStatus.status}</span>
               </div>
-              <p className="text-xs text-gray-500 mb-3">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
                 Port: {serviceStatus.port} | Uptime: {serviceStatus.uptime}
               </p>
               <div className="flex gap-2">
@@ -122,7 +122,7 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="text-center">
-              <p className="text-sm text-gray-600 mb-2">Service status unavailable</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Service status unavailable</p>
               <Button label="Start Service" size="small" onClick={() => handleServiceAction('start')} />
             </div>
           )}
@@ -131,8 +131,8 @@ export default function HomePage() {
         {/* Plugins Summary */}
         <Card title="Plugins" className="h-fit">
           <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600 mb-1">{plugins.length}</div>
-            <p className="text-sm text-gray-600">Installed plugins</p>
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">{plugins.length}</div>
+            <p className="text-sm text-gray-600 dark:text-gray-300">Installed plugins</p>
           </div>
         </Card>
       </div>

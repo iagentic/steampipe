@@ -157,7 +157,7 @@ export default function DashboardsPage() {
   );
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
       <Toast ref={setToast} />
       <ConfirmDialog />
       
@@ -196,7 +196,7 @@ export default function DashboardsPage() {
       >
         <div className="flex flex-col gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Name</label>
+            <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">Name</label>
             <InputText 
               value={formData.name} 
               onChange={e => setFormData({...formData, name: e.target.value})}
@@ -204,7 +204,7 @@ export default function DashboardsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Description</label>
+            <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">Description</label>
             <InputTextarea 
               value={formData.description} 
               onChange={e => setFormData({...formData, description: e.target.value})}
@@ -213,7 +213,7 @@ export default function DashboardsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Tags</label>
+            <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">Tags</label>
             <Chips 
               value={formData.tags} 
               onChange={e => setFormData({...formData, tags: e.value || []})}
@@ -221,7 +221,7 @@ export default function DashboardsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">SQL Query</label>
+            <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">SQL Query</label>
             <InputTextarea 
               value={formData.sql} 
               onChange={e => setFormData({...formData, sql: e.target.value})}
@@ -243,7 +243,7 @@ export default function DashboardsPage() {
       >
         <div className="flex flex-col gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Name</label>
+            <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">Name</label>
             <InputText 
               value={formData.name} 
               onChange={e => setFormData({...formData, name: e.target.value})}
@@ -251,7 +251,7 @@ export default function DashboardsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Description</label>
+            <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">Description</label>
             <InputTextarea 
               value={formData.description} 
               onChange={e => setFormData({...formData, description: e.target.value})}
@@ -260,7 +260,7 @@ export default function DashboardsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Tags</label>
+            <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">Tags</label>
             <Chips 
               value={formData.tags} 
               onChange={e => setFormData({...formData, tags: e.value || []})}
@@ -268,7 +268,7 @@ export default function DashboardsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">SQL Query</label>
+            <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">SQL Query</label>
             <InputTextarea 
               value={formData.sql} 
               onChange={e => setFormData({...formData, sql: e.target.value})}

@@ -129,7 +129,7 @@ export default function DashboardDetailPage() {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
       <Toast ref={setToast} />
       
       <div className="mb-4">
@@ -147,13 +147,13 @@ export default function DashboardDetailPage() {
         className="mb-6"
       >
         <div className="mb-4">
-          <p className="text-gray-600">{dashboard.description}</p>
+          <p className="text-gray-600 dark:text-gray-300">{dashboard.description}</p>
         </div>
         
         {dashboard.sql && (
           <div className="mb-4">
-            <h3 className="text-lg font-semibold mb-2">SQL Query</h3>
-            <div className="bg-gray-100 p-3 rounded font-mono text-sm">
+            <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">SQL Query</h3>
+            <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-sm text-gray-900 dark:text-gray-100">
               {dashboard.sql}
             </div>
           </div>
@@ -172,7 +172,7 @@ export default function DashboardDetailPage() {
         <Card title="Query Results" className="mt-6">
           {queryResult.success ? (
             <div>
-              <div className="mb-4 text-sm text-gray-600">
+              <div className="mb-4 text-sm text-gray-600 dark:text-gray-300">
                 <span>Rows: {queryResult.row_count}</span>
                 {queryResult.timing && (
                   <span className="ml-4">Duration: {queryResult.timing.duration_ms}ms</span>
@@ -201,14 +201,14 @@ export default function DashboardDetailPage() {
                   ))}
                 </DataTable>
               ) : (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                   No data returned
                 </div>
               )}
             </div>
           ) : (
-            <div className="p-4 bg-red-50 border border-red-200 rounded">
-              <p className="text-red-800 font-mono text-sm">{queryResult.error}</p>
+            <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded">
+              <p className="text-red-800 dark:text-red-200 font-mono text-sm">{queryResult.error}</p>
             </div>
           )}
         </Card>

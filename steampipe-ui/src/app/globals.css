@@ -24,3 +24,225 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light theme (default) */
+.light-theme {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --card-bg: #ffffff;
+  --hover-bg: #f3f4f6;
+}
+
+/* Dark theme */
+.dark-theme {
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --border-color: #374151;
+  --card-bg: #1f2937;
+  --hover-bg: #374151;
+}
+
+/* Apply theme variables */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom card styling for dark mode */
+.dark-theme .p-card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.dark-theme .p-card .p-card-title {
+  color: var(--text-primary);
+}
+
+.dark-theme .p-card .p-card-subtitle {
+  color: var(--text-secondary);
+}
+
+.dark-theme .p-card .p-card-content {
+  color: var(--text-secondary);
+}
+
+/* Custom data table styling for dark mode */
+.dark-theme .p-datatable {
+  background-color: var(--card-bg);
+}
+
+.dark-theme .p-datatable .p-datatable-header {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.dark-theme .p-datatable .p-datatable-thead > tr > th {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-theme .p-datatable .p-datatable-tbody > tr {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+}
+
+.dark-theme .p-datatable .p-datatable-tbody > tr:hover {
+  background-color: var(--hover-bg);
+}
+
+.dark-theme .p-datatable .p-datatable-tbody > tr > td {
+  border-color: var(--border-color);
+}
+
+/* Custom dialog styling for dark mode */
+.dark-theme .p-dialog {
+  background-color: var(--card-bg);
+}
+
+.dark-theme .p-dialog .p-dialog-header {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.dark-theme .p-dialog .p-dialog-title {
+  color: var(--text-primary);
+}
+
+.dark-theme .p-dialog .p-dialog-content {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+}
+
+/* Custom input styling for dark mode */
+.dark-theme .p-inputtext {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-theme .p-inputtext:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.dark-theme .p-inputtext::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Custom multiselect styling for dark mode */
+.dark-theme .p-multiselect {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.dark-theme .p-multiselect .p-multiselect-label {
+  color: var(--text-primary);
+}
+
+.dark-theme .p-multiselect-panel {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.dark-theme .p-multiselect-panel .p-multiselect-item {
+  color: var(--text-primary);
+}
+
+.dark-theme .p-multiselect-panel .p-multiselect-item:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Custom chips styling for dark mode */
+.dark-theme .p-chips {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.dark-theme .p-chips .p-chips-input {
+  color: var(--text-primary);
+}
+
+.dark-theme .p-chips .p-chips-token {
+  background-color: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+/* Custom textarea styling for dark mode */
+.dark-theme .p-inputtextarea {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-theme .p-inputtextarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+/* Custom toast styling for dark mode */
+.dark-theme .p-toast .p-toast-message {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Custom confirm dialog styling for dark mode */
+.dark-theme .p-confirmdialog .p-dialog {
+  background-color: var(--card-bg);
+}
+
+.dark-theme .p-confirmdialog .p-dialog-content {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+}
+
+/* Custom data view styling for dark mode */
+.dark-theme .p-dataview {
+  background-color: var(--card-bg);
+}
+
+.dark-theme .p-dataview .p-dataview-header {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.dark-theme .p-dataview .p-dataview-content {
+  background-color: var(--card-bg);
+}
+
+/* Custom paginator styling for dark mode */
+.dark-theme .p-paginator {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.dark-theme .p-paginator .p-paginator-pages .p-paginator-page {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-theme .p-paginator .p-paginator-pages .p-paginator-page:hover {
+  background-color: var(--hover-bg);
+}
+
+.dark-theme .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Smooth transitions for theme switching */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
