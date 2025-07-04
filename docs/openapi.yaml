@@ -1,0 +1,683 @@
+openapi: 3.0.3
+info:
+  title: DevOps REST API
+  description: |
+    REST API for DevOps - a universal query interface for cloud APIs, databases, and services.
+    
+    This API provides programmatic access to Steampipe's query execution, plugin management, and service management capabilities.
+    
+    ## Features
+    - Execute SQL queries against cloud resources and databases
+    - Manage DevOps plugins (install, uninstall, update, list)
+    - Control DevOps database service (start, stop, restart, status)
+    - Batch query execution
+    - Health monitoring
+    
+    ## Authentication
+    This API runs in local mode and does not require cloud authentication.
+    
+    ## Prerequisites
+    - DevOps database service must be running (`steampipe service start`)
+    - Appropriate plugins must be installed for the resources you want to query
+  version: 1.0.0
+  contact:
+    name: DevOps API Support
+    url: https://iagentic.ai
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+  - url: http://localhost:9000
+    description: Alternative port
+
+paths:
+  /health:
+    get:
+      summary: Health Check
+      description: Check if the API server is running and healthy
+      operationId: getHealth
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2024-01-15T10:30:00Z"
+                  version:
+                    type: string
+                    example: "1.0.0"
+        '500':
+          description: Server is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/docs:
+    get:
+      summary: API Documentation
+      description: Get comprehensive API documentation and endpoint information
+      operationId: getApiDocs
+      tags:
+        - Documentation
+      responses:
+        '200':
+          description: API documentation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  endpoints:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        method:
+                          type: string
+                        description:
+                          type: string
+                        parameters:
+                          type: array
+                          items:
+                            type: object
+                        request_body:
+                          type: object
+                        responses:
+                          type: object
+
+  /api/v1/query:
+    post:
+      summary: Execute SQL Query
+      description: |
+        Execute a single SQL query and return results in JSON format.
+        
+        The query can access any tables provided by installed Steampipe plugins
+        (e.g., AWS resources, Kubernetes objects, database tables, etc.).
+      operationId: executeQuery
+      tags:
+        - Query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - sql
+              properties:
+                sql:
+                  type: string
+                  description: SQL query to execute
+                  example: "SELECT vpc_id, cidr_block, state FROM aws_vpc LIMIT 5"
+      responses:
+        '200':
+          description: Query executed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+        '400':
+          description: Invalid request (malformed SQL, missing parameters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Query execution failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/query/batch:
+    post:
+      summary: Execute Batch Queries
+      description: Execute multiple SQL queries in a single request
+      operationId: executeBatchQueries
+      tags:
+        - Query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - queries
+              properties:
+                queries:
+                  type: array
+                  items:
+                    type: string
+                  description: Array of SQL queries to execute
+                  example: ["SELECT 1 as query1", "SELECT 2 as query2"]
+      responses:
+        '200':
+          description: Batch queries executed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/QueryResponse'
+                  total_queries:
+                    type: integer
+                  successful_queries:
+                    type: integer
+                  failed_queries:
+                    type: integer
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/service/status:
+    get:
+      summary: Get Service Status
+      description: Get the current status of the DevOps database service
+      operationId: getServiceStatus
+      tags:
+        - Service Management
+      responses:
+        '200':
+          description: Service status retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [running, stopped, starting, stopping]
+                    example: "running"
+                  port:
+                    type: integer
+                    example: 9193
+                  host:
+                    type: string
+                    example: "localhost"
+                  database:
+                    type: string
+                    example: "steampipe"
+                  uptime:
+                    type: string
+                    example: "2h 15m 30s"
+                  connections:
+                    type: integer
+                    example: 5
+        '500':
+          description: Failed to get service status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/service/start:
+    post:
+      summary: Start Service
+      description: Start the Steampipe database service
+      operationId: startService
+      tags:
+        - Service Management
+      parameters:
+        - name: port
+          in: query
+          description: Port to start the service on
+          required: false
+          schema:
+            type: integer
+            default: 9193
+        - name: listen_addresses
+          in: query
+          description: Listen addresses for the service
+          required: false
+          schema:
+            type: string
+            default: "localhost"
+      responses:
+        '200':
+          description: Service started successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Service started successfully"
+                  port:
+                    type: integer
+                    example: 9193
+        '500':
+          description: Failed to start service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/service/stop:
+    post:
+      summary: Stop Service
+      description: Stop the Steampipe database service
+      operationId: stopService
+      tags:
+        - Service Management
+      parameters:
+        - name: force
+          in: query
+          description: Force stop the service
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Service stopped successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Service stopped successfully"
+        '500':
+          description: Failed to stop service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/service/restart:
+    post:
+      summary: Restart Service
+      description: Restart the Steampipe database service
+      operationId: restartService
+      tags:
+        - Service Management
+      parameters:
+        - name: port
+          in: query
+          description: Port to restart the service on
+          required: false
+          schema:
+            type: integer
+            default: 9193
+        - name: listen_addresses
+          in: query
+          description: Listen addresses for the service
+          required: false
+          schema:
+            type: string
+            default: "localhost"
+      responses:
+        '200':
+          description: Service restarted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Service restarted successfully"
+                  port:
+                    type: integer
+                    example: 9193
+        '500':
+          description: Failed to restart service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/plugins:
+    get:
+      summary: List Plugins
+      description: Get a list of all installed Steampipe plugins
+      operationId: listPlugins
+      tags:
+        - Plugin Management
+      responses:
+        '200':
+          description: Plugins retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  plugins:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PluginInfo'
+                  total:
+                    type: integer
+                    example: 3
+        '500':
+          description: Failed to retrieve plugins
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/plugins/install:
+    post:
+      summary: Install Plugin
+      description: Install a new Steampipe plugin
+      operationId: installPlugin
+      tags:
+        - Plugin Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: Plugin name to install
+                  example: "hub.steampipe.io/plugins/turbot/aws@latest"
+                version:
+                  type: string
+                  description: Specific version to install (optional)
+                  example: "1.16.1"
+      responses:
+        '200':
+          description: Plugin installed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Plugin installed successfully"
+                  plugin:
+                    $ref: '#/components/schemas/PluginInfo'
+        '400':
+          description: Invalid plugin name or version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Failed to install plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/plugins/uninstall:
+    delete:
+      summary: Uninstall Plugin
+      description: Uninstall a Steampipe plugin
+      operationId: uninstallPlugin
+      tags:
+        - Plugin Management
+      parameters:
+        - name: name
+          in: query
+          description: Plugin name to uninstall
+          required: true
+          schema:
+            type: string
+            example: "hub.steampipe.io/plugins/turbot/aws@latest"
+      responses:
+        '200':
+          description: Plugin uninstalled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Plugin uninstalled successfully"
+        '400':
+          description: Invalid plugin name
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Plugin not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Failed to uninstall plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/plugins/update:
+    put:
+      summary: Update Plugin
+      description: Update a Steampipe plugin to the latest version
+      operationId: updatePlugin
+      tags:
+        - Plugin Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: Plugin name to update
+                  example: "hub.steampipe.io/plugins/turbot/aws@latest"
+                version:
+                  type: string
+                  description: Specific version to update to (optional)
+                  example: "1.16.2"
+      responses:
+        '200':
+          description: Plugin updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Plugin updated successfully"
+                  plugin:
+                    $ref: '#/components/schemas/PluginInfo'
+        '400':
+          description: Invalid plugin name or version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Plugin not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Failed to update plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    QueryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether the query executed successfully
+          example: true
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+          description: Query results as an array of objects
+          example:
+            - vpc_id: "vpc-12345678"
+              cidr_block: "10.0.0.0/16"
+              state: "available"
+        columns:
+          type: array
+          items:
+            type: string
+          description: Column names from the query result
+          example: ["vpc_id", "cidr_block", "state"]
+        row_count:
+          type: integer
+          description: Number of rows returned
+          example: 5
+        timing:
+          $ref: '#/components/schemas/TimingInfo'
+        error:
+          type: string
+          description: Error message if the query failed
+          example: "ERROR: relation \"nonexistent_table\" does not exist"
+
+    TimingInfo:
+      type: object
+      properties:
+        duration_ms:
+          type: integer
+          description: Query execution time in milliseconds
+          example: 1250
+        rows_returned:
+          type: integer
+          description: Number of rows returned by the query
+          example: 100
+        uncached_rows_fetched:
+          type: integer
+          description: Number of rows fetched from the source (not cached)
+          example: 50
+        cached_rows_fetched:
+          type: integer
+          description: Number of rows fetched from cache
+          example: 50
+        hydrate_calls:
+          type: integer
+          description: Number of hydrate function calls made
+          example: 25
+        connection_count:
+          type: integer
+          description: Number of connections used
+          example: 1
+
+    PluginInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Plugin name
+          example: "hub.steampipe.io/plugins/turbot/aws@latest"
+        version:
+          type: string
+          description: Plugin version
+          example: "1.16.1"
+        connections:
+          type: array
+          items:
+            type: string
+          description: Available connections for this plugin
+          example: ["aws", "aws_alt"]
+        status:
+          type: string
+          enum: [installed, failed, updating]
+          description: Plugin installation status
+          example: "installed"
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          description: Error message
+          example: "Invalid SQL query: syntax error"
+        code:
+          type: string
+          description: Error code
+          example: "INVALID_SQL"
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+
+  securitySchemes:
+    # No authentication required for local mode
+    none:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: No authentication required for local mode
+
+tags:
+  - name: Health
+    description: Health check endpoints
+  - name: Documentation
+    description: API documentation endpoints
+  - name: Query
+    description: SQL query execution endpoints
+  - name: Service Management
+    description: Steampipe database service management
+  - name: Plugin Management
+    description: Steampipe plugin management
+
+externalDocs:
+  description: Steampipe Documentation
+  url: https://steampipe.io/docs 
