@@ -157,34 +157,46 @@ export default function DashboardsPage() {
   );
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <>
       <Toast ref={setToast} />
       <ConfirmDialog />
       
-      <div className="flex flex-wrap gap-2 mb-4">
-        <InputText
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search dashboards..."
-          className="w-64"
-        />
-        <MultiSelect
-          value={selectedTags}
-          options={tags.map(tag => ({ label: tag, value: tag }))}
-          onChange={e => setSelectedTags(e.value)}
-          placeholder="Filter by tag"
-          className="w-64"
-        />
-        <DataViewLayoutOptions layout={layout} onChange={e => setLayout(e.value as 'grid' | 'list')} />
-        <Button 
-          label="Add Dashboard" 
-          icon="pi pi-plus"
-          onClick={handleCreate}
-          className="ml-auto"
-        />
+      {/* Page Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Dashboards</h1>
+        <p className="text-gray-600 dark:text-gray-300">Create and manage your custom dashboards</p>
       </div>
       
-      <DataView value={filtered} layout={layout} itemTemplate={itemTemplate} paginator rows={8} />
+      {/* Filters and Actions */}
+      <Card className="mb-6">
+        <div className="flex flex-wrap gap-4 items-center">
+          <InputText
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search dashboards..."
+            className="w-64"
+          />
+          <MultiSelect
+            value={selectedTags}
+            options={tags.map(tag => ({ label: tag, value: tag }))}
+            onChange={e => setSelectedTags(e.value)}
+            placeholder="Filter by tag"
+            className="w-64"
+          />
+          <DataViewLayoutOptions layout={layout} onChange={e => setLayout(e.value as 'grid' | 'list')} />
+          <Button 
+            label="Add Dashboard" 
+            icon="pi pi-plus"
+            onClick={handleCreate}
+            className="ml-auto"
+          />
+        </div>
+      </Card>
+      
+      {/* Dashboards Grid/List */}
+      <Card>
+        <DataView value={filtered} layout={layout} itemTemplate={itemTemplate} paginator rows={8} />
+      </Card>
 
       {/* Create Modal */}
       <Dialog 
@@ -279,6 +291,6 @@ export default function DashboardsPage() {
           </div>
         </div>
       </Dialog>
-    </div>
+    </>
   );
 } 

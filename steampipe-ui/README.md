@@ -1,34 +1,42 @@
-# Steampipe UI
+# DevOps Admin Dashboard
 
-A modern web interface for Steampipe built with Next.js and PrimeReact.
+A modern admin dashboard for DevOps operations and monitoring, built with Next.js and PrimeReact.
 
 ## Features
 
-### 🏠 Dashboard Overview
-- **Health Status**: Real-time API health monitoring
-- **Service Management**: Start, stop, and restart Steampipe service
+### 🏠 **Admin Dashboard Overview**
+- **System Health**: Real-time API health monitoring with status indicators
+- **Service Management**: Start, stop, and restart DevOps services
 - **Plugin Management**: View installed plugins with status and connections
 - **Quick Actions**: Easy access to common operations
+- **Responsive Design**: Works on desktop and mobile devices
 
-### 📊 Dynamic Dashboards
+### 📊 **Dynamic Dashboards**
 - **Dashboard List**: Grid and list view with search and tag filtering
 - **CRUD Operations**: Create, read, update, and delete dashboards
 - **Tag Management**: Organize dashboards with custom tags
 - **Query Execution**: Run SQL queries directly from dashboards
 - **Results Display**: Interactive data tables with sorting and filtering
 
-### 🔧 API Integration
-- **REST API Client**: Full integration with Steampipe REST API
-- **Service Control**: Manage Steampipe database service
+### 🎨 **Modern Admin Interface**
+- **Sidebar Navigation**: Collapsible sidebar with menu items
+- **Theme Support**: Light and dark theme with smooth transitions
+- **User Profile**: Admin user information display
+- **Breadcrumb Navigation**: Clear page hierarchy
+- **Professional UI**: Modern admin dashboard design
+
+### 🔧 **API Integration**
+- **REST API Client**: Full integration with DevOps REST API
+- **Service Control**: Manage DevOps database service
 - **Plugin Operations**: Install, uninstall, and update plugins
 - **Query Execution**: Execute single and batch SQL queries
 - **Error Handling**: Comprehensive error handling and user feedback
 
 ## Prerequisites
 
-1. **Steampipe REST API Server**: Must be running on `http://localhost:8080`
+1. **DevOps REST API Server**: Must be running on `http://localhost:8080`
 2. **Node.js**: Version 18 or higher
-3. **Steampipe Service**: Should be running (`steampipe service start`)
+3. **DevOps Service**: Should be running (`steampipe service start`)
 
 ## Installation
 
@@ -54,14 +62,21 @@ A modern web interface for Steampipe built with Next.js and PrimeReact.
 
 ## Usage
 
+### Admin Dashboard Navigation
+- **Sidebar**: Use the collapsible sidebar to navigate between sections
+- **Theme Toggle**: Click the sun/moon icon to switch between light and dark themes
+- **User Menu**: View admin user information in the top-right corner
+- **Breadcrumbs**: See current page location in the header
+
 ### Dashboard Overview
 - View system health and service status
-- Manage Steampipe service (start/stop/restart)
+- Manage DevOps service (start/stop/restart)
 - Monitor installed plugins
 - Access quick actions
 
 ### Managing Dashboards
 1. **Create Dashboard**:
+   - Navigate to "Dashboards" in the sidebar
    - Click "Add Dashboard" button
    - Fill in name, description, tags, and SQL query
    - Click "Create"
@@ -89,7 +104,7 @@ A modern web interface for Steampipe built with Next.js and PrimeReact.
 
 ## API Endpoints
 
-The UI integrates with the following Steampipe REST API endpoints:
+The UI integrates with the following DevOps REST API endpoints:
 
 - `GET /health` - Health check
 - `GET /api/v1/service/status` - Service status
@@ -114,7 +129,8 @@ src/
 │   │   └── [id]/          # Dashboard detail
 │   └── page.tsx           # Home page
 ├── components/            # Reusable components
-│   └── Navigation.tsx     # Navigation bar
+│   ├── Navigation.tsx     # Admin sidebar and header
+│   └── ThemeProvider.tsx  # Theme management
 └── lib/                   # Utilities
     └── api.ts             # API client
 ```
@@ -134,11 +150,11 @@ npm start
 ## Troubleshooting
 
 ### CORS Issues
-If you encounter CORS errors, ensure the Steampipe API server is configured with CORS headers.
+If you encounter CORS errors, ensure the DevOps API server is configured with CORS headers.
 
 ### Service Not Running
 If the service status shows as unavailable:
-1. Check if Steampipe is installed
+1. Check if DevOps is installed
 2. Run `steampipe service start`
 3. Verify the service is running on the expected port
 

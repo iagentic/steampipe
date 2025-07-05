@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Steampipe UI",
-  description: "Web interface for Steampipe",
+  title: "DevOps Admin Dashboard",
+  description: "Admin dashboard for DevOps operations and monitoring",
 };
 
 export default function RootLayout({
@@ -32,8 +32,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider>
-          <Navigation />
-          {children}
+          <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+            <Navigation />
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <main className="flex-1 overflow-auto">
+                {children}
+              </main>
+            </div>
+          </div>
         </ThemeProvider>
       </body>
     </html>

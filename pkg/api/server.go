@@ -359,19 +359,29 @@ func (s *Server) handleServiceStart(w http.ResponseWriter, r *http.Request) {
 		listenAddresses = []string{addr}
 	}
 	result := db_local.StartServices(ctx, listenAddresses, port, "service")
+	
+	// Consider both ServiceStarted and ServiceAlreadyRunning as success
+	success := result.Status == db_local.ServiceStarted || result.Status == db_local.ServiceAlreadyRunning
+	
 	response := map[string]interface{}{
-		"success": result.Status == db_local.ServiceStarted,
+		"success": success,
 	}
+	
 	if result.Error != nil {
 		response["error"] = result.Error.Error()
 		response["success"] = false
 	} else {
-		response["message"] = "Service started successfully"
+		if result.Status == db_local.ServiceAlreadyRunning {
+			response["message"] = "Service is already running"
+		} else {
+			response["message"] = "Service started successfully"
+		}
 		if result.DbState != nil {
 			response["port"] = result.DbState.Port
 			response["database"] = result.DbState.Database
 		}
 	}
+	
 	w.Header().Set("Content-Type", "application/json")
 	if !response["success"].(bool) {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -422,14 +432,22 @@ func (s *Server) handleServiceRestart(w http.ResponseWriter, r *http.Request) {
 		listenAddresses = []string{addr}
 	}
 	startResult := db_local.StartServices(ctx, listenAddresses, port, "service")
+	
+	// Consider both ServiceStarted and ServiceAlreadyRunning as success
+	success := startResult.Status == db_local.ServiceStarted || startResult.Status == db_local.ServiceAlreadyRunning
+	
 	response := map[string]interface{}{
-		"success": startResult.Status == db_local.ServiceStarted,
+		"success": success,
 	}
 	if startResult.Error != nil {
 		response["error"] = startResult.Error.Error()
 		response["success"] = false
 	} else {
-		response["message"] = "Service restarted successfully"
+		if startResult.Status == db_local.ServiceAlreadyRunning {
+			response["message"] = "Service is already running"
+		} else {
+			response["message"] = "Service restarted successfully"
+		}
 		if startResult.DbState != nil {
 			response["port"] = startResult.DbState.Port
 			response["database"] = startResult.DbState.Database

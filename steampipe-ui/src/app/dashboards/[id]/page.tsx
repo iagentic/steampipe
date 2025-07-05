@@ -129,18 +129,22 @@ export default function DashboardDetailPage() {
   }
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <>
       <Toast ref={setToast} />
       
-      <div className="mb-4">
+      {/* Page Header */}
+      <div className="mb-6">
         <Button 
           label="Back to Dashboards" 
           icon="pi pi-arrow-left"
           onClick={goBack}
           className="mb-4"
         />
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Dashboard Details</h1>
+        <p className="text-gray-600 dark:text-gray-300">Execute queries and view results</p>
       </div>
 
+      {/* Dashboard Info */}
       <Card 
         title={dashboard.name} 
         subTitle={dashboard.tags?.join(', ')}
@@ -168,8 +172,9 @@ export default function DashboardDetailPage() {
         />
       </Card>
 
+      {/* Query Results */}
       {queryResult && (
-        <Card title="Query Results" className="mt-6">
+        <Card title="Query Results" className="mb-6">
           {queryResult.success ? (
             <div>
               <div className="mb-4 text-sm text-gray-600 dark:text-gray-300">
@@ -213,6 +218,6 @@ export default function DashboardDetailPage() {
           )}
         </Card>
       )}
-    </div>
+    </>
   );
 } 
